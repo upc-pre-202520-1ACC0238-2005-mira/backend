@@ -4,11 +4,11 @@ import { Type } from 'class-transformer';
 export class CreatePostDto {
   @IsNotEmpty()
   @IsString()
-  autor: string;
+  autor!: string;
 
   @IsNotEmpty()
   @IsString()
-  contenido: string;
+  contenido!: string;
 
   @IsOptional()
   @IsDate()

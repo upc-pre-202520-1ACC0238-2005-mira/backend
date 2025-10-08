@@ -3,15 +3,15 @@ import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
 export class CreateRecetaDto {
   @IsNotEmpty()
   @IsString()
-  nombre: string;
+  nombre!: string;
 
   @IsNotEmpty()
   @IsString()
-  metodo: string;
+  metodo!: string;
 
   @IsNotEmpty()
   @IsString()
-  ratio: string;
+  ratio!: string;
 
   @IsOptional()
   @IsString()

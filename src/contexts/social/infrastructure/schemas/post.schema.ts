@@ -4,19 +4,19 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class PostDocument extends Document {
   @Prop({ required: true })
-  autor: string;
+  autor!: string;
 
   @Prop({ required: true })
-  contenido: string;
+  contenido!: string;
 
   @Prop({ required: true, default: () => new Date() })
-  fecha: Date;
+  fecha!: Date;
 
   @Prop({ default: 0 })
-  likes: number;
+  likes!: number;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 }
 
 export const PostSchema = SchemaFactory.createForClass(PostDocument);

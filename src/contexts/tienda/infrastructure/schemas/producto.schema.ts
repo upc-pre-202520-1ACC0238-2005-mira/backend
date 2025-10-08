@@ -4,19 +4,19 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class ProductoDocument extends Document {
   @Prop({ required: true })
-  nombre: string;
+  nombre!: string;
 
   @Prop({ required: true })
-  precio: number;
+  precio!: number;
 
   @Prop({ required: true, default: 0 })
-  stock: number;
+  stock!: number;
 
   @Prop()
   descripcion?: string;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 }
 
 export const ProductoSchema = SchemaFactory.createForClass(ProductoDocument);

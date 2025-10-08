@@ -4,19 +4,19 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class RecetaDocument extends Document {
   @Prop({ required: true })
-  nombre: string;
+  nombre!: string;
 
   @Prop({ required: true })
-  metodo: string;
+  metodo!: string;
 
   @Prop({ required: true })
-  ratio: string;
+  ratio!: string;
 
   @Prop()
   notas?: string;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 }
 
 export const RecetaSchema = SchemaFactory.createForClass(RecetaDocument);
