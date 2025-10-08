@@ -273,6 +273,6 @@ El proyecto está configurado para desplegarse en Vercel. Asegúrate de:
 
 ---
 
-**Autor**: Guillermo Tantalean Mesta  
+**Autor**: Mira Startup | Xantina
 **Universidad**: UPC  
 **Curso**: Aplicaciones Móviles 2025-2
