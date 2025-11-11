@@ -23,7 +23,10 @@ export class PostRepository implements IPostRepository {
   }
 
   async findByAutor(autor: string): Promise<Post[]> {
-    const posts = await this.postModel.find({ autor }).sort({ fecha: -1 }).exec();
+    const posts = await this.postModel
+      .find({ autor })
+      .sort({ fecha: -1 })
+      .exec();
     return posts.map((post) => this.toEntity(post));
   }
 

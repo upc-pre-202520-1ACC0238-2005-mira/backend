@@ -13,7 +13,10 @@ export class RecetaRepository implements IRecetaRepository {
   ) {}
 
   async findAll(): Promise<Receta[]> {
-    const recetas = await this.recetaModel.find().exec();
+    const recetas = await this.recetaModel
+      .find()
+      .sort({ createdAt: -1 })
+      .exec();
     return recetas.map((receta) => this.toEntity(receta));
   }
 
@@ -23,7 +26,19 @@ export class RecetaRepository implements IRecetaRepository {
   }
 
   async findByMetodo(metodo: string): Promise<Receta[]> {
-    const recetas = await this.recetaModel.find({ metodo }).exec();
+    const recetas = await this.recetaModel
+      .find({ metodo })
+      .sort({ createdAt: -1 })
+      .exec();
+    return recetas.map((receta) => this.toEntity(receta));
+  }
+
+  async findByUsuarioId(usuarioId: string, limit?: number): Promise<Receta[]> {
+    const query = this.recetaModel.find({ usuarioId }).sort({ createdAt: -1 });
+    if (limit && limit > 0) {
+      query.limit(limit);
+    }
+    const recetas = await query.exec();
     return recetas.map((receta) => this.toEntity(receta));
   }
 
@@ -52,6 +67,12 @@ export class RecetaRepository implements IRecetaRepository {
       metodo: recetaDoc.metodo,
       ratio: recetaDoc.ratio,
       notas: recetaDoc.notas,
+      usuarioId: recetaDoc.usuarioId,
+      calificacion: recetaDoc.calificacion,
+      gramosCafe: recetaDoc.gramosCafe,
+      mililitrosAgua: recetaDoc.mililitrosAgua,
+      temperaturaAgua: recetaDoc.temperaturaAgua,
+      tiempoExtraccion: recetaDoc.tiempoExtraccion,
       createdAt: recetaDoc.createdAt,
       updatedAt: recetaDoc.updatedAt,
     };

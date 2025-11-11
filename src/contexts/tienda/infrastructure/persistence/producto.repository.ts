@@ -30,7 +30,9 @@ export class ProductoRepository implements IProductoRepository {
   }
 
   async findInStock(): Promise<Producto[]> {
-    const productos = await this.productoModel.find({ stock: { $gt: 0 } }).exec();
+    const productos = await this.productoModel
+      .find({ stock: { $gt: 0 } })
+      .exec();
     return productos.map((producto) => this.toEntity(producto));
   }
 

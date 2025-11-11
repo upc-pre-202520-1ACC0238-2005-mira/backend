@@ -19,7 +19,18 @@ export class ExtraccionController {
   constructor(private readonly extraccionService: ExtraccionService) {}
 
   @Get()
-  async findAll(@Query('metodo') metodo?: string) {
+  async findAll(
+    @Query('metodo') metodo?: string,
+    @Query('usuarioId') usuarioId?: string,
+    @Query('limit') limit?: string,
+  ) {
+    if (usuarioId) {
+      const parsedLimit =
+        limit !== undefined && !Number.isNaN(Number(limit))
+          ? Number(limit)
+          : undefined;
+      return this.extraccionService.findByUsuarioId(usuarioId, parsedLimit);
+    }
     if (metodo) {
       return this.extraccionService.findByMetodo(metodo);
     }
@@ -38,7 +49,10 @@ export class ExtraccionController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateRecetaDto: UpdateRecetaDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateRecetaDto: UpdateRecetaDto,
+  ) {
     return this.extraccionService.update(id, updateRecetaDto);
   }
 

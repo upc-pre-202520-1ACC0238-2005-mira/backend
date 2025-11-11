@@ -19,8 +19,12 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<{ access_token: string; user: Partial<User> }> {
-    const existingUser = await this.userRepository.findByEmail(registerDto.email);
+  async register(
+    registerDto: RegisterDto,
+  ): Promise<{ access_token: string; user: Partial<User> }> {
+    const existingUser = await this.userRepository.findByEmail(
+      registerDto.email,
+    );
     if (existingUser) {
       throw new ConflictException('Email already exists');
     }
@@ -46,13 +50,18 @@ export class AuthService {
     };
   }
 
-  async login(loginDto: LoginDto): Promise<{ access_token: string; user: Partial<User> }> {
+  async login(
+    loginDto: LoginDto,
+  ): Promise<{ access_token: string; user: Partial<User> }> {
     const user = await this.userRepository.findByEmail(loginDto.email);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password,
+    );
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }

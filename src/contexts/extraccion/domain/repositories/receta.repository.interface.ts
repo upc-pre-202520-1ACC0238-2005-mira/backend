@@ -3,4 +3,5 @@ import { BaseRepository } from '../../../shared/interfaces/base.repository';
 
 export interface IRecetaRepository extends BaseRepository<Receta> {
   findByMetodo(metodo: string): Promise<Receta[]>;
+  findByUsuarioId(usuarioId: string, limit?: number): Promise<Receta[]>;
 }

@@ -19,7 +19,10 @@ export class TiendaController {
   constructor(private readonly tiendaService: TiendaService) {}
 
   @Get()
-  async findAll(@Query('nombre') nombre?: string, @Query('inStock') inStock?: string) {
+  async findAll(
+    @Query('nombre') nombre?: string,
+    @Query('inStock') inStock?: string,
+  ) {
     if (nombre) {
       return this.tiendaService.findByName(nombre);
     }
@@ -41,7 +44,10 @@ export class TiendaController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateProductoDto: UpdateProductoDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateProductoDto: UpdateProductoDto,
+  ) {
     return this.tiendaService.update(id, updateProductoDto);
   }
 

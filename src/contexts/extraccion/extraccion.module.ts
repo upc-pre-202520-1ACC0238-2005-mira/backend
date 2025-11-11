@@ -3,7 +3,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ExtraccionController } from './interfaces/extraccion.controller';
 import { ExtraccionService } from './application/extraccion.service';
 import { RecetaRepository } from './infrastructure/persistence/receta.repository';
-import { RecetaDocument, RecetaSchema } from './infrastructure/schemas/receta.schema';
+import {
+  RecetaDocument,
+  RecetaSchema,
+} from './infrastructure/schemas/receta.schema';
 
 @Module({
   imports: [

@@ -27,6 +27,10 @@ export class ExtraccionService {
     return this.recetaRepository.findByMetodo(metodo);
   }
 
+  async findByUsuarioId(usuarioId: string, limit?: number): Promise<Receta[]> {
+    return this.recetaRepository.findByUsuarioId(usuarioId, limit);
+  }
+
   async create(createRecetaDto: CreateRecetaDto): Promise<Receta> {
     return this.recetaRepository.create(createRecetaDto);
   }

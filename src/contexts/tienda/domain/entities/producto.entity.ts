@@ -7,7 +7,12 @@ export class Producto {
   createdAt?: Date;
   updatedAt?: Date;
 
-  constructor(nombre: string, precio: number, stock: number, descripcion?: string) {
+  constructor(
+    nombre: string,
+    precio: number,
+    stock: number,
+    descripcion?: string,
+  ) {
     this.nombre = nombre;
     this.precio = precio;
     this.stock = stock;

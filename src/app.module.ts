@@ -22,7 +22,10 @@ import { SocialModule } from './contexts/social/social.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         const uri = configService.get<string>('MONGO_URI');
-        console.log('🧩 MONGO_URI cargada:', uri ? '✅ OK' : '❌ No encontrada');
+        console.log(
+          '🧩 MONGO_URI cargada:',
+          uri ? '✅ OK' : '❌ No encontrada',
+        );
         return { uri };
       },
       inject: [ConfigService],

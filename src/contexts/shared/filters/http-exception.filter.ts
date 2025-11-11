@@ -22,11 +22,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const exceptionResponse = exception.getResponse();
 
       if (typeof exceptionResponse === 'object') {
-        message =
-          (exceptionResponse as any).message || exception.message;
+        message = (exceptionResponse as any).message || exception.message;
         errors = (exceptionResponse as any).errors || null;
       } else {
-        message = exceptionResponse as string;
+        message = exceptionResponse;
       }
     } else if (exception instanceof Error) {
       message = exception.message;

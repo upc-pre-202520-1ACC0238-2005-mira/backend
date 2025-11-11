@@ -7,7 +7,12 @@ export class Post {
   createdAt?: Date;
   updatedAt?: Date;
 
-  constructor(autor: string, contenido: string, fecha: Date = new Date(), likes: number = 0) {
+  constructor(
+    autor: string,
+    contenido: string,
+    fecha: Date = new Date(),
+    likes: number = 0,
+  ) {
     this.autor = autor;
     this.contenido = contenido;
     this.fecha = fecha;

@@ -35,8 +35,14 @@ export class TiendaService {
     return this.productoRepository.create(createProductoDto);
   }
 
-  async update(id: string, updateProductoDto: UpdateProductoDto): Promise<Producto> {
-    const producto = await this.productoRepository.update(id, updateProductoDto);
+  async update(
+    id: string,
+    updateProductoDto: UpdateProductoDto,
+  ): Promise<Producto> {
+    const producto = await this.productoRepository.update(
+      id,
+      updateProductoDto,
+    );
     if (!producto) {
       throw new NotFoundException(`Producto with id ${id} not found`);
     }
