@@ -33,6 +33,9 @@ export class RecetaDocument extends Document {
   @Prop()
   tiempoExtraccion?: number;
 
+  @Prop({ default: true })
+  esPublica?: boolean;
+
   createdAt!: Date;
   updatedAt!: Date;
 }

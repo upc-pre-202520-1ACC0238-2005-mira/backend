@@ -49,4 +49,7 @@ export class UpdateRecetaDto {
   @IsOptional()
   @IsInt()
   tiempoExtraccion?: number;
+
+  @IsOptional()
+  esPublica?: boolean;
 }

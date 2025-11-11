@@ -7,6 +7,7 @@ import {
   RecetaDocument,
   RecetaSchema,
 } from './infrastructure/schemas/receta.schema';
+import { ExtraccionSeeder } from './infrastructure/seeds/extraccion.seeder';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import {
       provide: 'IRecetaRepository',
       useClass: RecetaRepository,
     },
+    ExtraccionSeeder,
   ],
   exports: [ExtraccionService],
 })

@@ -10,6 +10,7 @@ export class Receta {
   mililitrosAgua?: number;
   temperaturaAgua?: number;
   tiempoExtraccion?: number;
+  esPublica?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 
@@ -24,6 +25,7 @@ export class Receta {
     mililitrosAgua?: number,
     temperaturaAgua?: number,
     tiempoExtraccion?: number,
+    esPublica?: boolean,
   ) {
     this.nombre = nombre;
     this.metodo = metodo;
@@ -35,5 +37,6 @@ export class Receta {
     this.mililitrosAgua = mililitrosAgua;
     this.temperaturaAgua = temperaturaAgua;
     this.tiempoExtraccion = tiempoExtraccion;
+    this.esPublica = esPublica ?? true;
   }
 }

@@ -73,6 +73,7 @@ export class RecetaRepository implements IRecetaRepository {
       mililitrosAgua: recetaDoc.mililitrosAgua,
       temperaturaAgua: recetaDoc.temperaturaAgua,
       tiempoExtraccion: recetaDoc.tiempoExtraccion,
+      esPublica: recetaDoc.esPublica,
       createdAt: recetaDoc.createdAt,
       updatedAt: recetaDoc.updatedAt,
     };
