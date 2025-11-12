@@ -13,7 +13,7 @@ export class PostRepository implements IPostRepository {
   ) {}
 
   async findAll(): Promise<Post[]> {
-    const posts = await this.postModel.find().sort({ fecha: -1 }).exec();
+    const posts = await this.postModel.find().sort({ createdAt: -1 }).exec();
     return posts.map((post) => this.toEntity(post));
   }
 
@@ -22,10 +22,20 @@ export class PostRepository implements IPostRepository {
     return post ? this.toEntity(post) : null;
   }
 
-  async findByAutor(autor: string): Promise<Post[]> {
+  async findByUserId(userId: string): Promise<Post[]> {
     const posts = await this.postModel
-      .find({ autor })
-      .sort({ fecha: -1 })
+      .find({ userId })
+      .sort({ createdAt: -1 })
+      .exec();
+    return posts.map((post) => this.toEntity(post));
+  }
+
+  async findFeed(limit: number = 20, offset: number = 0): Promise<Post[]> {
+    const posts = await this.postModel
+      .find()
+      .sort({ createdAt: -1 })
+      .skip(offset)
+      .limit(limit)
       .exec();
     return posts.map((post) => this.toEntity(post));
   }
@@ -48,20 +58,35 @@ export class PostRepository implements IPostRepository {
     return !!result;
   }
 
-  async incrementLikes(id: string): Promise<Post | null> {
-    const updatedPost = await this.postModel
-      .findByIdAndUpdate(id, { $inc: { likes: 1 } }, { new: true })
+  async incrementLikesCount(postId: string): Promise<void> {
+    await this.postModel
+      .findByIdAndUpdate(postId, { $inc: { likesCount: 1 } })
       .exec();
-    return updatedPost ? this.toEntity(updatedPost) : null;
+  }
+
+  async decrementLikesCount(postId: string): Promise<void> {
+    await this.postModel
+      .findByIdAndUpdate(postId, { $inc: { likesCount: -1 } })
+      .exec();
+  }
+
+  async incrementCommentsCount(postId: string): Promise<void> {
+    await this.postModel
+      .findByIdAndUpdate(postId, { $inc: { commentsCount: 1 } })
+      .exec();
   }
 
   private toEntity(postDoc: PostDocument): Post {
     return {
       id: (postDoc._id as any).toString(),
-      autor: postDoc.autor,
-      contenido: postDoc.contenido,
-      fecha: postDoc.fecha,
-      likes: postDoc.likes,
+      userId: postDoc.userId,
+      userName: postDoc.userName,
+      userEmail: postDoc.userEmail,
+      content: postDoc.content,
+      imageUrl: postDoc.imageUrl,
+      extractionId: postDoc.extractionId,
+      likesCount: postDoc.likesCount,
+      commentsCount: postDoc.commentsCount,
       createdAt: postDoc.createdAt,
       updatedAt: postDoc.updatedAt,
     };

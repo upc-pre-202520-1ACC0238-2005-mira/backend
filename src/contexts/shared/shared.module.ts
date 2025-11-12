@@ -22,6 +22,6 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
     }),
   ],
   providers: [JwtAuthGuard],
-  exports: [ConfigModuleSetup, JwtAuthGuard],
+  exports: [ConfigModuleSetup, JwtAuthGuard, JwtModule],
 })
 export class SharedModule {}

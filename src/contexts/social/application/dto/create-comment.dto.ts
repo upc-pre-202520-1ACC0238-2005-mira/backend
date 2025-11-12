@@ -1,16 +1,13 @@
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class CreatePostDto {
+export class CreateCommentDto {
   @IsNotEmpty()
   @IsString()
-  @MaxLength(1000)
+  @MaxLength(500)
   content!: string;
 
   @IsOptional()
   @IsString()
-  imageUrl?: string;
-
-  @IsOptional()
-  @IsString()
-  extractionId?: string;
+  parentCommentId?: string;
 }
+

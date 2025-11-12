@@ -4,16 +4,28 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class PostDocument extends Document {
   @Prop({ required: true })
-  autor!: string;
+  userId!: string;
 
   @Prop({ required: true })
-  contenido!: string;
+  userName!: string;
 
-  @Prop({ required: true, default: () => new Date() })
-  fecha!: Date;
+  @Prop({ required: true })
+  userEmail!: string;
+
+  @Prop({ required: true })
+  content!: string;
+
+  @Prop()
+  imageUrl?: string;
+
+  @Prop()
+  extractionId?: string;
 
   @Prop({ default: 0 })
-  likes!: number;
+  likesCount!: number;
+
+  @Prop({ default: 0 })
+  commentsCount!: number;
 
   createdAt!: Date;
   updatedAt!: Date;

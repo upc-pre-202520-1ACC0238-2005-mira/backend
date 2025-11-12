@@ -8,9 +8,13 @@ import {
   RecetaSchema,
 } from './infrastructure/schemas/receta.schema';
 import { ExtraccionSeeder } from './infrastructure/seeds/extraccion.seeder';
+import { SocialModule } from '../social/social.module';
+import { SharedModule } from '../shared/shared.module';
 
 @Module({
   imports: [
+    SharedModule,
+    SocialModule,
     MongooseModule.forFeature([
       { name: RecetaDocument.name, schema: RecetaSchema },
     ]),

@@ -9,10 +9,14 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { ExtraccionService } from '../application/extraccion.service';
 import { CreateRecetaDto } from '../application/dto/create-receta.dto';
 import { UpdateRecetaDto } from '../application/dto/update-receta.dto';
+import { CompleteExtractionDto } from '../application/dto/complete-extraction.dto';
+import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
+import { CurrentUser } from '../../shared/decorators/user.decorator';
 
 @Controller('extraccion')
 export class ExtraccionController {
@@ -60,5 +64,22 @@ export class ExtraccionController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string) {
     return this.extraccionService.delete(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('complete')
+  @HttpCode(HttpStatus.CREATED)
+  async completeExtraction(
+    @CurrentUser('sub') userId: string,
+    @CurrentUser('name') userName: string,
+    @CurrentUser('email') userEmail: string,
+    @Body() completeDto: CompleteExtractionDto,
+  ) {
+    return this.extraccionService.completeExtraction(
+      userId,
+      userName,
+      userEmail,
+      completeDto,
+    );
   }
 }
