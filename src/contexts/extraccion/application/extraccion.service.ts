@@ -1,9 +1,12 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import type { IRecetaRepository } from '../domain/repositories/receta.repository.interface';
+import type { IHistorialExtraccionRepository } from '../domain/repositories/historial-extraccion.repository.interface';
 import { CreateRecetaDto } from './dto/create-receta.dto';
 import { UpdateRecetaDto } from './dto/update-receta.dto';
 import { CompleteExtractionDto } from './dto/complete-extraction.dto';
+import { GuardarExtraccionDto } from './dto/guardar-extraccion.dto';
 import { Receta } from '../domain/entities/receta.entity';
+import { HistorialExtraccion } from '../domain/entities/historial-extraccion.entity';
 import { SocialService } from '../../social/application/social.service';
 
 @Injectable()
@@ -11,6 +14,8 @@ export class ExtraccionService {
   constructor(
     @Inject('IRecetaRepository')
     private readonly recetaRepository: IRecetaRepository,
+    @Inject('IHistorialExtraccionRepository')
+    private readonly historialRepository: IHistorialExtraccionRepository,
     private readonly socialService: SocialService,
   ) {}
 
@@ -111,5 +116,38 @@ export class ExtraccionService {
       receta: updatedReceta,
       postId,
     };
+  }
+
+  // Historial de extracciones
+  async guardarExtraccion(
+    userId: string,
+    guardarDto: GuardarExtraccionDto,
+  ): Promise<HistorialExtraccion> {
+    const historial = new HistorialExtraccion(
+      userId,
+      guardarDto.metodoNombre,
+      guardarDto.valoracionGeneral,
+      guardarDto.perfilSensorial,
+      guardarDto.notasSensoriales,
+    );
+
+    return this.historialRepository.create(historial);
+  }
+
+  async obtenerHistorialUsuario(userId: string): Promise<HistorialExtraccion[]> {
+    return this.historialRepository.findByUserId(userId);
+  }
+
+  async eliminarHistorial(userId: string, historialId: string): Promise<void> {
+    const historial = await this.historialRepository.findById(historialId);
+    if (!historial) {
+      throw new NotFoundException(`Historial with id ${historialId} not found`);
+    }
+    if (historial.userId !== userId) {
+      throw new NotFoundException(
+        'No tienes permiso para eliminar este historial',
+      );
+    }
+    await this.historialRepository.delete(historialId);
   }
 }

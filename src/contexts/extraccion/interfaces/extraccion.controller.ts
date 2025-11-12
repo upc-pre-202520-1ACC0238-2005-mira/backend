@@ -15,6 +15,7 @@ import { ExtraccionService } from '../application/extraccion.service';
 import { CreateRecetaDto } from '../application/dto/create-receta.dto';
 import { UpdateRecetaDto } from '../application/dto/update-receta.dto';
 import { CompleteExtractionDto } from '../application/dto/complete-extraction.dto';
+import { GuardarExtraccionDto } from '../application/dto/guardar-extraccion.dto';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
 import { CurrentUser } from '../../shared/decorators/user.decorator';
 
@@ -81,5 +82,33 @@ export class ExtraccionController {
       userEmail,
       completeDto,
     );
+  }
+
+  // Historial de extracciones
+  @UseGuards(JwtAuthGuard)
+  @Post('historial')
+  @HttpCode(HttpStatus.CREATED)
+  async guardarHistorial(
+    @CurrentUser('sub') userId: string,
+    @Body() guardarDto: GuardarExtraccionDto,
+  ) {
+    return this.extraccionService.guardarExtraccion(userId, guardarDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('historial/usuario')
+  @HttpCode(HttpStatus.OK)
+  async obtenerHistorial(@CurrentUser('sub') userId: string) {
+    return this.extraccionService.obtenerHistorialUsuario(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('historial/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async eliminarHistorial(
+    @CurrentUser('sub') userId: string,
+    @Param('id') historialId: string,
+  ) {
+    return this.extraccionService.eliminarHistorial(userId, historialId);
   }
 }
