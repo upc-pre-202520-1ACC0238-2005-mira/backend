@@ -40,3 +40,4 @@ export const HistorialExtraccionSchema = SchemaFactory.createForClass(
   HistorialExtraccionDocument,
 );
 
+

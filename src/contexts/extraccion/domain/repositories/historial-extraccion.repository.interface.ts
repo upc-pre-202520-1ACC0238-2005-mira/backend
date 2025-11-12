@@ -6,3 +6,4 @@ export interface IHistorialExtraccionRepository
   findByUserId(userId: string): Promise<HistorialExtraccion[]>;
 }
 
+

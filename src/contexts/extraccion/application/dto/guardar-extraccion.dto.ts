@@ -37,3 +37,4 @@ export class GuardarExtraccionDto {
   notasSensoriales?: string;
 }
 
+
