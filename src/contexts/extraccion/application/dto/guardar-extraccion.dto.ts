@@ -1,4 +1,12 @@
-import { IsString, IsNotEmpty, IsNumber, IsOptional, Min, Max, ValidateNested } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  Min,
+  Max,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 class PerfilSensorialDto {
@@ -35,7 +43,17 @@ export class GuardarExtraccionDto {
   @IsOptional()
   @IsString()
   notasSensoriales?: string;
+
+  @IsOptional()
+  @IsString()
+  bolsaCafeId?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0.1)
+  gramosCafeUtilizados?: number;
 }
+
 
 
 

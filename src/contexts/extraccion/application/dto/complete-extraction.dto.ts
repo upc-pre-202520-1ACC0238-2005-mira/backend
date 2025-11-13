@@ -48,5 +48,14 @@ export class CompleteExtractionDto {
 
   @IsNotEmpty()
   publishToSocial!: boolean; // true = publicar, false = solo guardar privado
+
+  @IsOptional()
+  @IsString()
+  bolsaCafeId?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0.1)
+  gramosCafeUtilizados?: number;
 }
 

@@ -13,8 +13,14 @@ import {
   HistorialExtraccionSchema,
 } from './infrastructure/schemas/historial-extraccion.schema';
 import { ExtraccionSeeder } from './infrastructure/seeds/extraccion.seeder';
+import { RecetaSeedService } from './infrastructure/seeds/seed.service';
 import { SocialModule } from '../social/social.module';
 import { SharedModule } from '../shared/shared.module';
+import {
+  BolsaCafeDocument,
+  BolsaCafeSchema,
+} from './infrastructure/schemas/bolsa-cafe.schema';
+import { BolsaCafeRepository } from './infrastructure/persistence/bolsa-cafe.repository';
 
 @Module({
   imports: [
@@ -25,6 +31,10 @@ import { SharedModule } from '../shared/shared.module';
       {
         name: HistorialExtraccionDocument.name,
         schema: HistorialExtraccionSchema,
+      },
+      {
+        name: BolsaCafeDocument.name,
+        schema: BolsaCafeSchema,
       },
     ]),
   ],
@@ -39,7 +49,12 @@ import { SharedModule } from '../shared/shared.module';
       provide: 'IHistorialExtraccionRepository',
       useClass: HistorialExtraccionRepository,
     },
+    {
+      provide: 'IBolsaCafeRepository',
+      useClass: BolsaCafeRepository,
+    },
     ExtraccionSeeder,
+    RecetaSeedService,
   ],
   exports: [ExtraccionService],
 })

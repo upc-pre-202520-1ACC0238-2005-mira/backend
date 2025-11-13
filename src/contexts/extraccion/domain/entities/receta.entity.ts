@@ -1,3 +1,24 @@
+export interface PasoExtraccion {
+  step: number;
+  time_start: number;
+  time_end: number;
+  action: string;
+  water_ml: number;
+  calculation: string | null;
+  requiere_accion_manual?: boolean; // Indica si se debe esperar acción del usuario
+}
+
+export interface ConfiguracionMetodo {
+  grind: string;
+  temperature: string;
+  base: {
+    cafe_g: number;
+    agua_total_ml: number;
+  };
+  total_time_seconds: number;
+  steps: PasoExtraccion[];
+}
+
 export class Receta {
   id?: string;
   nombre: string;
@@ -11,6 +32,8 @@ export class Receta {
   temperaturaAgua?: number;
   tiempoExtraccion?: number;
   esPublica?: boolean;
+  configuracion?: ConfiguracionMetodo; // Nueva propiedad para recetas con pasos
+  esPorDefecto?: boolean; // Marca las recetas por defecto del sistema
   createdAt?: Date;
   updatedAt?: Date;
 
@@ -26,6 +49,8 @@ export class Receta {
     temperaturaAgua?: number,
     tiempoExtraccion?: number,
     esPublica?: boolean,
+    configuracion?: ConfiguracionMetodo,
+    esPorDefecto?: boolean,
   ) {
     this.nombre = nombre;
     this.metodo = metodo;
@@ -38,5 +63,7 @@ export class Receta {
     this.temperaturaAgua = temperaturaAgua;
     this.tiempoExtraccion = tiempoExtraccion;
     this.esPublica = esPublica ?? true;
+    this.configuracion = configuracion;
+    this.esPorDefecto = esPorDefecto ?? false;
   }
 }

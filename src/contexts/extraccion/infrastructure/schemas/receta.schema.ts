@@ -36,6 +36,29 @@ export class RecetaDocument extends Document {
   @Prop({ default: true })
   esPublica?: boolean;
 
+  @Prop({ type: Object })
+  configuracion?: {
+    grind: string;
+    temperature: string;
+    base: {
+      cafe_g: number;
+      agua_total_ml: number;
+    };
+    total_time_seconds: number;
+    steps: Array<{
+      step: number;
+      time_start: number;
+      time_end: number;
+      action: string;
+      water_ml: number;
+      calculation: string | null;
+      requiere_accion_manual?: boolean;
+    }>;
+  };
+
+  @Prop({ default: false })
+  esPorDefecto?: boolean;
+
   createdAt!: Date;
   updatedAt!: Date;
 }

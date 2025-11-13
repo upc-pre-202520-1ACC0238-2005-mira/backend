@@ -1,4 +1,9 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import type { IRecetaRepository } from '../domain/repositories/receta.repository.interface';
 import type { IHistorialExtraccionRepository } from '../domain/repositories/historial-extraccion.repository.interface';
 import { CreateRecetaDto } from './dto/create-receta.dto';
@@ -8,6 +13,11 @@ import { GuardarExtraccionDto } from './dto/guardar-extraccion.dto';
 import { Receta } from '../domain/entities/receta.entity';
 import { HistorialExtraccion } from '../domain/entities/historial-extraccion.entity';
 import { SocialService } from '../../social/application/social.service';
+import type { IBolsaCafeRepository } from '../domain/repositories/bolsa-cafe.repository.interface';
+import { BolsaCafe } from '../domain/entities/bolsa-cafe.entity';
+import { CreateBolsaCafeDto } from './dto/create-bolsa-cafe.dto';
+import { UpdateBolsaCafeDto } from './dto/update-bolsa-cafe.dto';
+import { ConsumirBolsaCafeDto } from './dto/consumir-bolsa-cafe.dto';
 
 @Injectable()
 export class ExtraccionService {
@@ -16,6 +26,8 @@ export class ExtraccionService {
     private readonly recetaRepository: IRecetaRepository,
     @Inject('IHistorialExtraccionRepository')
     private readonly historialRepository: IHistorialExtraccionRepository,
+    @Inject('IBolsaCafeRepository')
+    private readonly bolsaCafeRepository: IBolsaCafeRepository,
     private readonly socialService: SocialService,
   ) {}
 
@@ -33,6 +45,11 @@ export class ExtraccionService {
 
   async findByMetodo(metodo: string): Promise<Receta[]> {
     return this.recetaRepository.findByMetodo(metodo);
+  }
+
+  async findRecetasPorDefecto(): Promise<Receta[]> {
+    const todasRecetas = await this.recetaRepository.findAll();
+    return todasRecetas.filter((receta) => receta.esPorDefecto === true);
   }
 
   async findByUsuarioId(usuarioId: string, limit?: number): Promise<Receta[]> {
@@ -85,6 +102,17 @@ export class ExtraccionService {
       throw new NotFoundException('Error updating receta');
     }
 
+    if (
+      completeDto.bolsaCafeId &&
+      completeDto.gramosCafeUtilizados &&
+      completeDto.gramosCafeUtilizados > 0
+    ) {
+      await this.consumirBolsaCafeUsuario(userId, {
+        bolsaId: completeDto.bolsaCafeId,
+        gramos: completeDto.gramosCafeUtilizados,
+      });
+    }
+
     // Si se debe publicar en social, crear el post
     let postId: string | undefined;
     if (completeDto.publishToSocial) {
@@ -131,6 +159,17 @@ export class ExtraccionService {
       guardarDto.notasSensoriales,
     );
 
+    if (
+      guardarDto.bolsaCafeId &&
+      guardarDto.gramosCafeUtilizados &&
+      guardarDto.gramosCafeUtilizados > 0
+    ) {
+      await this.consumirBolsaCafeUsuario(userId, {
+        bolsaId: guardarDto.bolsaCafeId,
+        gramos: guardarDto.gramosCafeUtilizados,
+      });
+    }
+
     return this.historialRepository.create(historial);
   }
 
@@ -149,5 +188,71 @@ export class ExtraccionService {
       );
     }
     await this.historialRepository.delete(historialId);
+  }
+
+  // Bolsas de café
+  async crearBolsaCafe(
+    usuarioId: string,
+    createDto: CreateBolsaCafeDto,
+  ): Promise<BolsaCafe> {
+    const bolsa = new BolsaCafe(
+      usuarioId,
+      createDto.nombre,
+      createDto.pesoInicial,
+      createDto.pesoRestante,
+      createDto.origen,
+      createDto.tostador,
+      createDto.varietal,
+      createDto.notas,
+      createDto.moliendaSugerida,
+    );
+
+    return this.bolsaCafeRepository.create(bolsa);
+  }
+
+  async obtenerBolsasPorUsuario(usuarioId: string): Promise<BolsaCafe[]> {
+    return this.bolsaCafeRepository.findByUsuarioId(usuarioId);
+  }
+
+  async actualizarBolsaCafe(
+    usuarioId: string,
+    bolsaId: string,
+    updateDto: UpdateBolsaCafeDto,
+  ): Promise<BolsaCafe> {
+    await this.assertBolsaOwnership(usuarioId, bolsaId);
+    const updated = await this.bolsaCafeRepository.update(bolsaId, updateDto);
+    if (!updated) {
+      throw new NotFoundException('Bolsa de café no encontrada');
+    }
+    return updated;
+  }
+
+  async eliminarBolsaCafe(usuarioId: string, bolsaId: string): Promise<void> {
+    await this.assertBolsaOwnership(usuarioId, bolsaId);
+    const deleted = await this.bolsaCafeRepository.delete(bolsaId);
+    if (!deleted) {
+      throw new NotFoundException('Bolsa de café no encontrada');
+    }
+  }
+
+  async consumirBolsaCafeUsuario(
+    usuarioId: string,
+    consumirDto: ConsumirBolsaCafeDto,
+  ): Promise<BolsaCafe> {
+    await this.assertBolsaOwnership(usuarioId, consumirDto.bolsaId);
+    return this.bolsaCafeRepository.consumirCafe(
+      consumirDto.bolsaId,
+      consumirDto.gramos,
+    );
+  }
+
+  private async assertBolsaOwnership(usuarioId: string, bolsaId: string) {
+    const bolsa = await this.bolsaCafeRepository.findById(bolsaId);
+    if (!bolsa) {
+      throw new NotFoundException('Bolsa de café no encontrada');
+    }
+    if (bolsa.usuarioId !== usuarioId) {
+      throw new ForbiddenException('No tienes acceso a esta bolsa de café');
+    }
   }
 }
