@@ -4,6 +4,7 @@ import {
   ConflictException,
   Inject,
   BadRequestException,
+  forwardRef,
 } from '@nestjs/common';
 import type { IPostRepository } from '../domain/repositories/post.repository.interface';
 import type { ILikeRepository } from '../domain/repositories/like.repository.interface';
@@ -31,6 +32,7 @@ export class SocialService {
     private readonly followRepository: IFollowRepository,
     @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
+    @Inject(forwardRef(() => ExtraccionService))
     private readonly extraccionService: ExtraccionService,
   ) {}
 

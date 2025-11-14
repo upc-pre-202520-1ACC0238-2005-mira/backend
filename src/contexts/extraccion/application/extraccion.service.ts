@@ -3,6 +3,7 @@ import {
   Inject,
   NotFoundException,
   ForbiddenException,
+  forwardRef,
 } from '@nestjs/common';
 import type { IRecetaRepository } from '../domain/repositories/receta.repository.interface';
 import type { IHistorialExtraccionRepository } from '../domain/repositories/historial-extraccion.repository.interface';
@@ -28,6 +29,7 @@ export class ExtraccionService {
     private readonly historialRepository: IHistorialExtraccionRepository,
     @Inject('IBolsaCafeRepository')
     private readonly bolsaCafeRepository: IBolsaCafeRepository,
+    @Inject(forwardRef(() => SocialService))
     private readonly socialService: SocialService,
   ) {}
 

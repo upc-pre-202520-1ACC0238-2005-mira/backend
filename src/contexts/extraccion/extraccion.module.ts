@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ExtraccionController } from './interfaces/extraccion.controller';
 import { ExtraccionService } from './application/extraccion.service';
@@ -25,7 +25,7 @@ import { BolsaCafeRepository } from './infrastructure/persistence/bolsa-cafe.rep
 @Module({
   imports: [
     SharedModule,
-    SocialModule,
+    forwardRef(() => SocialModule),
     MongooseModule.forFeature([
       { name: RecetaDocument.name, schema: RecetaSchema },
       {
