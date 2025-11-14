@@ -27,6 +27,20 @@ export class UserRepository implements IUserRepository {
     return user ? this.toEntity(user) : null;
   }
 
+  async searchUsers(query: string, limit: number = 20): Promise<User[]> {
+    const searchRegex = new RegExp(query, 'i');
+    const users = await this.userModel
+      .find({
+        $or: [
+          { name: searchRegex },
+          { email: searchRegex },
+        ],
+      })
+      .limit(limit)
+      .exec();
+    return users.map((user) => this.toEntity(user));
+  }
+
   async create(data: Partial<User>): Promise<User> {
     const newUser = new this.userModel(data);
     const savedUser = await newUser.save();

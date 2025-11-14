@@ -235,6 +235,10 @@ export class ExtraccionService {
     }
   }
 
+  async findHistorialById(id: string): Promise<HistorialExtraccion | null> {
+    return this.historialRepository.findById(id);
+  }
+
   async consumirBolsaCafeUsuario(
     usuarioId: string,
     consumirDto: ConsumirBolsaCafeDto,

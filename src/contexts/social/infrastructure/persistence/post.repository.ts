@@ -40,6 +40,16 @@ export class PostRepository implements IPostRepository {
     return posts.map((post) => this.toEntity(post));
   }
 
+  async findFeedByUserIds(userIds: string[], limit: number = 20, offset: number = 0): Promise<Post[]> {
+    const posts = await this.postModel
+      .find({ userId: { $in: userIds } })
+      .sort({ createdAt: -1 })
+      .skip(offset)
+      .limit(limit)
+      .exec();
+    return posts.map((post) => this.toEntity(post));
+  }
+
   async create(data: Partial<Post>): Promise<Post> {
     const newPost = new this.postModel(data);
     const savedPost = await newPost.save();

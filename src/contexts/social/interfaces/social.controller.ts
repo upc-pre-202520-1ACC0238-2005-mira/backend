@@ -45,7 +45,19 @@ export class SocialController {
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
   ) {
+    // Feed público - muestra todos los posts
     return this.socialService.getFeed(limit, offset);
+  }
+
+  @Get('posts/feed/following')
+  @HttpCode(HttpStatus.OK)
+  async getFollowingFeed(
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+    @CurrentUser('sub') userId: string,
+  ) {
+    // Feed filtrado por usuarios seguidos
+    return this.socialService.getFeed(limit, offset, userId);
   }
 
   @Get('posts/:postId')
@@ -133,5 +145,56 @@ export class SocialController {
     @CurrentUser('sub') userId: string,
   ) {
     await this.socialService.deleteComment(commentId, userId);
+  }
+
+  // ========== SEARCH & FOLLOW ==========
+
+  @Get('users/search')
+  @HttpCode(HttpStatus.OK)
+  async searchUsers(
+    @Query('q') query: string,
+    @Query('limit') limit?: number,
+    @CurrentUser('sub') userId: string,
+  ) {
+    return this.socialService.searchUsers(query, userId, limit);
+  }
+
+  @Post('users/:userId/follow')
+  @HttpCode(HttpStatus.OK)
+  async followUser(
+    @Param('userId') followingId: string,
+    @CurrentUser('sub') followerId: string,
+  ) {
+    return this.socialService.toggleFollow(followerId, followingId);
+  }
+
+  @Get('users/:userId/following')
+  @HttpCode(HttpStatus.OK)
+  async checkFollowing(
+    @Param('userId') followingId: string,
+    @CurrentUser('sub') followerId: string,
+  ) {
+    const isFollowing = await this.socialService.checkFollowing(followerId, followingId);
+    return { following: isFollowing };
+  }
+
+  @Get('users/following')
+  @HttpCode(HttpStatus.OK)
+  async getFollowingUsers(@CurrentUser('sub') userId: string) {
+    return this.socialService.getFollowingUsers(userId);
+  }
+
+  @Get('users/followers')
+  @HttpCode(HttpStatus.OK)
+  async getFollowers(@CurrentUser('sub') userId: string) {
+    return this.socialService.getFollowers(userId);
+  }
+
+  // ========== EXTRACTION DATA ==========
+
+  @Get('posts/:postId/extraction')
+  @HttpCode(HttpStatus.OK)
+  async getPostExtractionData(@Param('postId') postId: string) {
+    return this.socialService.getPostExtractionData(postId);
   }
 }
