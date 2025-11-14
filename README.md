@@ -116,22 +116,6 @@ src/
         └── social.module.ts
 ```
 
-## ⚙️ Configuración
-
-### Variables de entorno
-
-Crea un archivo `.env` en la raíz del proyecto:
-
-```env
-# Puerto de la aplicación
-PORT=3000
-
-# Conexión a MongoDB
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/?retryWrites=true&w=majority
-
-# JWT Secret para autenticación
-JWT_SECRET=supersecretkey
-```
 
 ## 📦 Instalación
 
