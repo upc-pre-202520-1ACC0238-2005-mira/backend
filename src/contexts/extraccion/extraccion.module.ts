@@ -12,7 +12,7 @@ import {
   HistorialExtraccionDocument,
   HistorialExtraccionSchema,
 } from './infrastructure/schemas/historial-extraccion.schema';
-import { ExtraccionSeeder } from './infrastructure/seeds/extraccion.seeder';
+// import { ExtraccionSeeder } from './infrastructure/seeds/extraccion.seeder'; // Desactivado
 import { RecetaSeedService } from './infrastructure/seeds/seed.service';
 import { SocialModule } from '../social/social.module';
 import { SharedModule } from '../shared/shared.module';
@@ -53,7 +53,7 @@ import { BolsaCafeRepository } from './infrastructure/persistence/bolsa-cafe.rep
       provide: 'IBolsaCafeRepository',
       useClass: BolsaCafeRepository,
     },
-    ExtraccionSeeder,
+    // ExtraccionSeeder, // Desactivado - usa RecetaSeedService que tiene las recetas correctas
     RecetaSeedService,
   ],
   exports: [ExtraccionService],

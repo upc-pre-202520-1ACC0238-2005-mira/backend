@@ -18,6 +18,14 @@ export class UpdateRecetaDto {
 
   @IsOptional()
   @IsString()
+  etiqueta?: string;
+
+  @IsOptional()
+  @IsString()
+  descripcion?: string;
+
+  @IsOptional()
+  @IsString()
   ratio?: string;
 
   @IsOptional()

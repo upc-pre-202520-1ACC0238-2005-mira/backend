@@ -9,6 +9,12 @@ export class RecetaDocument extends Document {
   @Prop({ required: true })
   metodo!: string;
 
+  @Prop()
+  etiqueta?: string;
+
+  @Prop()
+  descripcion?: string;
+
   @Prop({ required: true })
   ratio!: string;
 

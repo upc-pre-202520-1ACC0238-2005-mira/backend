@@ -17,6 +17,14 @@ export class CreateRecetaDto {
   @IsString()
   metodo!: string;
 
+  @IsOptional()
+  @IsString()
+  etiqueta?: string;
+
+  @IsOptional()
+  @IsString()
+  descripcion?: string;
+
   @IsNotEmpty()
   @IsString()
   ratio!: string;

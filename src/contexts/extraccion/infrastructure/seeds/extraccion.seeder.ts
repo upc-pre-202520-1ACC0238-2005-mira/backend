@@ -71,19 +71,6 @@ export class ExtraccionSeeder implements OnModuleInit {
         tiempoExtraccion: 90,
         esPublica: true,
       },
-      {
-        nombre: 'Espresso clásico',
-        metodo: 'Espresso',
-        ratio: '1:2',
-        notas: 'Shot intenso con final dulce.',
-        usuarioId: 'admin',
-        calificacion: 5,
-        gramosCafe: 18,
-        mililitrosAgua: 36,
-        temperaturaAgua: 93,
-        tiempoExtraccion: 30,
-        esPublica: true,
-      },
     ];
 
     try {

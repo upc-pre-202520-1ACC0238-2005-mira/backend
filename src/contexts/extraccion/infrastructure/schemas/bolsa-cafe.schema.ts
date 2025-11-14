@@ -37,3 +37,7 @@ export class BolsaCafeDocument extends Document {
 export const BolsaCafeSchema = SchemaFactory.createForClass(BolsaCafeDocument);
 
 
+
+
+
+

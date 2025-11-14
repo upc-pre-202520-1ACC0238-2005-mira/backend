@@ -23,6 +23,8 @@ export class Receta {
   id?: string;
   nombre: string;
   metodo: string;
+  etiqueta?: string;
+  descripcion?: string;
   ratio: string;
   notas?: string;
   usuarioId: string;
@@ -42,6 +44,8 @@ export class Receta {
     metodo: string,
     ratio: string,
     usuarioId: string,
+    etiqueta?: string,
+    descripcion?: string,
     notas?: string,
     calificacion?: number,
     gramosCafe?: number,
@@ -54,6 +58,8 @@ export class Receta {
   ) {
     this.nombre = nombre;
     this.metodo = metodo;
+    this.etiqueta = etiqueta;
+    this.descripcion = descripcion;
     this.ratio = ratio;
     this.notas = notas;
     this.usuarioId = usuarioId;
