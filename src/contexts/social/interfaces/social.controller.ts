@@ -52,9 +52,9 @@ export class SocialController {
   @Get('posts/feed/following')
   @HttpCode(HttpStatus.OK)
   async getFollowingFeed(
+    @CurrentUser('sub') userId: string,
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
-    @CurrentUser('sub') userId: string,
   ) {
     // Feed filtrado por usuarios seguidos
     return this.socialService.getFeed(limit, offset, userId);
@@ -153,8 +153,8 @@ export class SocialController {
   @HttpCode(HttpStatus.OK)
   async searchUsers(
     @Query('q') query: string,
-    @Query('limit') limit?: number,
     @CurrentUser('sub') userId: string,
+    @Query('limit') limit?: number,
   ) {
     return this.socialService.searchUsers(query, userId, limit);
   }
