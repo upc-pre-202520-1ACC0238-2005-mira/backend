@@ -13,6 +13,7 @@ import { BusinessModule } from './contexts/business/business.module';
 import { TeamModule } from './contexts/team/team.module';
 import { ChatModule } from './contexts/chat/chat.module';
 import { NotificationsModule } from './contexts/notifications/notifications.module';
+import { TasksModule } from './contexts/tasks/tasks.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { NotificationsModule } from './contexts/notifications/notifications.modu
     TeamModule,
     ChatModule,
     NotificationsModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
