@@ -5,4 +5,5 @@ import { CreateAppUserData } from '../types/create-app-user-data.types';
 export interface IAppUserRepository extends BaseRepository<AppUser> {
   findByEmail(email: string): Promise<AppUser | null>;
   createUser(data: CreateAppUserData): Promise<AppUser>;
+  findByCreatedBy(createdBy: string): Promise<AppUser[]>;
 }

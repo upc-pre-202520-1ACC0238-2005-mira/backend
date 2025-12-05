@@ -18,6 +18,9 @@ export class AppUserDocument extends Document {
   @Prop({ required: false })
   image?: string;
 
+  @Prop({ required: false, type: Types.ObjectId, ref: 'AppUser' })
+  createdBy?: Types.ObjectId;
+
   createdAt!: Date;
   updatedAt!: Date;
 }

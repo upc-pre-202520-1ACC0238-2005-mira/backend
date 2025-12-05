@@ -54,6 +54,9 @@ export class AppUserRepository implements IAppUserRepository {
       password: data.password,
       role: data.role,
       image: data.image,
+      createdBy: data.createdBy
+        ? new Types.ObjectId(data.createdBy)
+        : undefined,
     });
 
     const savedUser = await newUser.save();
@@ -93,8 +96,16 @@ export class AppUserRepository implements IAppUserRepository {
       userDoc.password,
       userDoc.role,
       userDoc.image,
+      userDoc.createdBy?.toString(),
       userDoc.createdAt,
       userDoc.updatedAt,
     );
+  }
+
+  async findByCreatedBy(createdBy: string): Promise<AppUser[]> {
+    const users = await this.appUserModel
+      .find({ createdBy: new Types.ObjectId(createdBy) })
+      .exec();
+    return users.map((user) => this.toEntity(user));
   }
 }

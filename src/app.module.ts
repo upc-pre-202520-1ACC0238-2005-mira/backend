@@ -10,6 +10,7 @@ import { ExtraccionModule } from './contexts/extraccion/extraccion.module';
 import { TiendaModule } from './contexts/tienda/tienda.module';
 import { SocialModule } from './contexts/social/social.module';
 import { BusinessModule } from './contexts/business/business.module';
+import { TeamModule } from './contexts/team/team.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { BusinessModule } from './contexts/business/business.module';
     TiendaModule,
     SocialModule,
     BusinessModule,
+    TeamModule,
   ],
   controllers: [AppController],
   providers: [AppService],

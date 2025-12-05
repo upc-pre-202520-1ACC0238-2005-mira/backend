@@ -32,7 +32,7 @@ export class RegisterDto {
   )
   readonly password!: string;
 
-  @IsOptional()
+  @IsNotEmpty({ message: 'La imagen de perfil es requerida' })
   @IsString({ message: 'La imagen debe ser un string base64' })
-  readonly image?: string;
+  readonly image!: string;
 }

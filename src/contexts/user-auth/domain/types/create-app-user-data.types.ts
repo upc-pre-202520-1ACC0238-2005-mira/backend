@@ -4,4 +4,5 @@ export interface CreateAppUserData {
   readonly password: string;
   readonly role: 'user' | 'admin';
   readonly image?: string;
+  readonly createdBy?: string;
 }

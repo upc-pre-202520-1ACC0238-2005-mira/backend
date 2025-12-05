@@ -4,11 +4,16 @@ import {
   Body,
   HttpCode,
   HttpStatus,
+  Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UserAuthService } from '../application/user-auth.service';
 import { RegisterDto } from '../application/dto/register.dto';
 import { LoginDto } from '../application/dto/login.dto';
-import { AuthResponse } from '../domain/types/auth-response.types';
+import { UpdateProfileDto } from '../application/dto/update-profile.dto';
+import { AuthResponse, UserResponse } from '../domain/types/auth-response.types';
+import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
+import { CurrentUser } from '../../shared/decorators/user.decorator';
 
 @Controller('user-auth')
 export class UserAuthController {
@@ -24,5 +29,15 @@ export class UserAuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto): Promise<AuthResponse> {
     return this.userAuthService.login(loginDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('profile')
+  @HttpCode(HttpStatus.OK)
+  async updateProfile(
+    @CurrentUser('sub') userId: string,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ): Promise<UserResponse> {
+    return this.userAuthService.updateProfile(userId, updateProfileDto);
   }
 }

@@ -26,6 +26,12 @@ import { SharedModule } from '../shared/shared.module';
       useClass: AppUserRepository,
     },
   ],
-  exports: [UserAuthService],
+  exports: [
+    UserAuthService,
+    {
+      provide: 'IAppUserRepository',
+      useClass: AppUserRepository,
+    },
+  ],
 })
 export class UserAuthModule {}

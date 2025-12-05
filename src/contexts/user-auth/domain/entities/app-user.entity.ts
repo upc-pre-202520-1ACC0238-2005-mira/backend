@@ -5,6 +5,7 @@ export class AppUser {
   readonly password: string;
   readonly role: 'user' | 'admin';
   readonly image?: string;
+  readonly createdBy?: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -15,6 +16,7 @@ export class AppUser {
     password: string,
     role: 'user' | 'admin' = 'user',
     image?: string,
+    createdBy?: string,
     createdAt: Date = new Date(),
     updatedAt: Date = new Date(),
   ) {
@@ -24,6 +26,7 @@ export class AppUser {
     this.password = password;
     this.role = role;
     this.image = image;
+    this.createdBy = createdBy;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }

@@ -2,6 +2,7 @@ import {
   Injectable,
   ConflictException,
   UnauthorizedException,
+  NotFoundException,
   Inject,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -9,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import type { IAppUserRepository } from '../domain/repositories/app-user.repository.interface';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { AppUser } from '../domain/entities/app-user.entity';
 import { AuthResponse, UserResponse } from '../domain/types/auth-response.types';
 
@@ -37,7 +39,7 @@ export class UserAuthService {
       name: registerDto.name.trim(),
       email: normalizedEmail,
       password: hashedPassword,
-      role: 'user',
+      role: 'admin', // Los que se registran son dueños (admin)
       image: registerDto.image,
     });
 
@@ -86,6 +88,63 @@ export class UserAuthService {
     };
 
     return this.jwtService.sign(payload);
+  }
+
+  async updateProfile(
+    userId: string,
+    updateProfileDto: UpdateProfileDto,
+  ): Promise<UserResponse> {
+    const user = await this.appUserRepository.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    // Verificar si el email cambió y si ya existe
+    if (updateProfileDto.email) {
+      const normalizedNewEmail = updateProfileDto.email.toLowerCase().trim();
+      const normalizedCurrentEmail = user.email.toLowerCase();
+
+      if (normalizedNewEmail !== normalizedCurrentEmail) {
+        const existingUser = await this.appUserRepository.findByEmail(
+          normalizedNewEmail,
+        );
+
+        if (existingUser && existingUser.id !== userId) {
+          throw new ConflictException('El email ya está en uso');
+        }
+      }
+    }
+
+    // Construir payload de actualización
+    const updatePayload: {
+      name?: string;
+      email?: string;
+      image?: string;
+    } = {};
+
+    if (updateProfileDto.name !== undefined) {
+      updatePayload.name = updateProfileDto.name.trim();
+    }
+
+    if (updateProfileDto.email !== undefined) {
+      updatePayload.email = updateProfileDto.email.toLowerCase().trim();
+    }
+
+    if (updateProfileDto.image !== undefined) {
+      updatePayload.image = updateProfileDto.image;
+    }
+
+    const updatedUser = await this.appUserRepository.update(
+      userId,
+      updatePayload as Partial<AppUser>,
+    );
+
+    if (!updatedUser) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    return this.toUserResponse(updatedUser);
   }
 
   private toUserResponse(user: AppUser): UserResponse {
