@@ -3,10 +3,12 @@ import {
   Inject,
   NotFoundException,
   ForbiddenException,
+  forwardRef,
 } from '@nestjs/common';
 import type { IBusinessMemberRepository } from '../domain/repositories/business-member.repository.interface';
 import type { IBusinessRepository } from '../domain/repositories/business.repository.interface';
 import type { IAppUserRepository } from '../../user-auth/domain/repositories/app-user.repository.interface';
+import { NotificationService } from '../../notifications/application/notification.service';
 import { AddMembersDto } from './dto/add-members.dto';
 import { UserResponse } from '../../user-auth/domain/types/auth-response.types';
 import { AppUser } from '../../user-auth/domain/entities/app-user.entity';
@@ -20,6 +22,8 @@ export class BusinessMemberService {
     private readonly businessRepository: IBusinessRepository,
     @Inject('IAppUserRepository')
     private readonly appUserRepository: IAppUserRepository,
+    @Inject(forwardRef(() => NotificationService))
+    private readonly notificationService: NotificationService,
   ) {}
 
   async getBusinessMembers(businessId: string): Promise<UserResponse[]> {
@@ -75,6 +79,21 @@ export class BusinessMemberService {
     const users = await this.businessMemberRepository.getUsersByBusinessId(
       businessId,
     );
+
+    // Crear notificaciones para los usuarios agregados y otros miembros
+    const admin = await this.appUserRepository.findById(adminId);
+    for (const userId of addMembersDto.userIds) {
+      const addedUser = await this.appUserRepository.findById(userId);
+      if (addedUser && admin) {
+        await this.notificationService.createUserAddedToBusinessNotification(
+          businessId,
+          business.name,
+          userId,
+          addedUser.name,
+          admin.name,
+        );
+      }
+    }
 
     return users.map((user) => this.toUserResponse(user));
   }

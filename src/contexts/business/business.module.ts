@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BusinessController } from './interfaces/business.controller';
 import { BusinessService } from './application/business.service';
@@ -15,11 +15,13 @@ import {
 } from './infrastructure/schemas/business-member.schema';
 import { SharedModule } from '../shared/shared.module';
 import { UserAuthModule } from '../user-auth/user-auth.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
     SharedModule,
     UserAuthModule,
+    forwardRef(() => NotificationsModule),
     MongooseModule.forFeature([
       { name: BusinessDocument.name, schema: BusinessSchema },
       { name: BusinessMemberDocument.name, schema: BusinessMemberSchema },
@@ -38,6 +40,11 @@ import { UserAuthModule } from '../user-auth/user-auth.module';
       useClass: BusinessMemberRepository,
     },
   ],
-  exports: [BusinessService, BusinessMemberService],
+  exports: [
+    BusinessService,
+    BusinessMemberService,
+    'IBusinessRepository',
+    'IBusinessMemberRepository',
+  ],
 })
 export class BusinessModule {}

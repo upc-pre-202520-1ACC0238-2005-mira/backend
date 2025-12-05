@@ -11,6 +11,8 @@ import { TiendaModule } from './contexts/tienda/tienda.module';
 import { SocialModule } from './contexts/social/social.module';
 import { BusinessModule } from './contexts/business/business.module';
 import { TeamModule } from './contexts/team/team.module';
+import { ChatModule } from './contexts/chat/chat.module';
+import { NotificationsModule } from './contexts/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { TeamModule } from './contexts/team/team.module';
     SocialModule,
     BusinessModule,
     TeamModule,
+    ChatModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

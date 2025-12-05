@@ -76,6 +76,89 @@ export class TeamService {
     return users.map((user) => this.toUserResponse(user));
   }
 
+  async updateTeamUser(
+    adminId: string,
+    userId: string,
+    updateData: {
+      name?: string;
+      email?: string;
+      password?: string;
+      image?: string;
+    },
+  ): Promise<UserResponse> {
+    // Verificar que el admin existe
+    const admin = await this.appUserRepository.findById(adminId);
+    if (!admin) {
+      throw new NotFoundException('Admin no encontrado');
+    }
+
+    if (admin.role !== 'admin') {
+      throw new ForbiddenException('Solo los administradores pueden editar usuarios');
+    }
+
+    // Verificar que el usuario existe y fue creado por este admin
+    const user = await this.appUserRepository.findById(userId);
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    if (user.createdBy !== adminId) {
+      throw new ForbiddenException('No puedes editar usuarios que no creaste');
+    }
+
+    // Si se actualiza el email, verificar que no esté en uso
+    if (updateData.email) {
+      const normalizedEmail = updateData.email.toLowerCase().trim();
+      const existingUser = await this.appUserRepository.findByEmail(normalizedEmail);
+      if (existingUser && existingUser.id !== userId) {
+        throw new ConflictException('El email ya está registrado');
+      }
+      updateData.email = normalizedEmail;
+    }
+
+    // Si se actualiza la contraseña, hashearla
+    if (updateData.password) {
+      updateData.password = await bcrypt.hash(updateData.password, 10);
+    }
+
+    // Actualizar el usuario
+    const updatedUser = await this.appUserRepository.update(userId, updateData);
+
+    if (!updatedUser) {
+      throw new NotFoundException('Error al actualizar el usuario');
+    }
+
+    return this.toUserResponse(updatedUser);
+  }
+
+  async deleteTeamUser(adminId: string, userId: string): Promise<void> {
+    // Verificar que el admin existe
+    const admin = await this.appUserRepository.findById(adminId);
+    if (!admin) {
+      throw new NotFoundException('Admin no encontrado');
+    }
+
+    if (admin.role !== 'admin') {
+      throw new ForbiddenException('Solo los administradores pueden eliminar usuarios');
+    }
+
+    // Verificar que el usuario existe y fue creado por este admin
+    const user = await this.appUserRepository.findById(userId);
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    if (user.createdBy !== adminId) {
+      throw new ForbiddenException('No puedes eliminar usuarios que no creaste');
+    }
+
+    // Eliminar el usuario
+    const deleted = await this.appUserRepository.delete(userId);
+    if (!deleted) {
+      throw new NotFoundException('Error al eliminar el usuario');
+    }
+  }
+
   private toUserResponse(user: AppUser): UserResponse {
     return {
       id: user.id,
