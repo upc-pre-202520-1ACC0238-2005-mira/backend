@@ -34,6 +34,7 @@ export interface BusinessChatMessageResponse {
   senderId: string;
   message: string;
   senderName?: string;
+  senderImage?: string;
   likes: number;
   dislikes: number;
   createdAt: Date;
@@ -167,6 +168,7 @@ export class ChatService {
         senderId: msg.senderId,
         message: msg.message,
         senderName: sender?.name,
+        senderImage: sender?.image,
         likes: msg.likes,
         dislikes: msg.dislikes,
         createdAt: msg.createdAt!,
@@ -230,6 +232,7 @@ export class ChatService {
       senderId: message.senderId,
       message: message.message,
       senderName: sender.name,
+      senderImage: sender.image,
       likes: message.likes,
       dislikes: message.dislikes,
       createdAt: message.createdAt!,
@@ -287,6 +290,7 @@ export class ChatService {
       senderId: updated.senderId,
       message: updated.message,
       senderName: sender?.name,
+      senderImage: sender?.image,
       likes: updated.likes,
       dislikes: updated.dislikes,
       createdAt: updated.createdAt!,
