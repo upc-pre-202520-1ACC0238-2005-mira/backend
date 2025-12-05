@@ -9,14 +9,19 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { BusinessService } from '../application/business.service';
+import { BusinessMemberService } from '../application/business-member.service';
 import { CreateBusinessDto } from '../application/dto/create-business.dto';
+import { AddMembersDto } from '../application/dto/add-members.dto';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
 import { CurrentUser } from '../../shared/decorators/user.decorator';
 
 @Controller('business')
 @UseGuards(JwtAuthGuard)
 export class BusinessController {
-  constructor(private readonly businessService: BusinessService) {}
+  constructor(
+    private readonly businessService: BusinessService,
+    private readonly businessMemberService: BusinessMemberService,
+  ) {}
 
   @Get()
   async findAllByUser(@CurrentUser('sub') userId: string) {
@@ -35,5 +40,24 @@ export class BusinessController {
     @Body() createBusinessDto: CreateBusinessDto,
   ) {
     return this.businessService.create(userId, createBusinessDto);
+  }
+
+  @Get(':id/members')
+  async getBusinessMembers(@Param('id') businessId: string) {
+    return this.businessMemberService.getBusinessMembers(businessId);
+  }
+
+  @Post(':id/members')
+  @HttpCode(HttpStatus.OK)
+  async addMembers(
+    @Param('id') businessId: string,
+    @CurrentUser('sub') adminId: string,
+    @Body() addMembersDto: AddMembersDto,
+  ) {
+    return this.businessMemberService.addMembers(
+      businessId,
+      adminId,
+      addMembersDto,
+    );
   }
 }

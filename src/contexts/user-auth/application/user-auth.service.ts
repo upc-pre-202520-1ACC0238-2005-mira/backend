@@ -3,6 +3,7 @@ import {
   ConflictException,
   UnauthorizedException,
   NotFoundException,
+  BadRequestException,
   Inject,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -11,6 +12,7 @@ import type { IAppUserRepository } from '../domain/repositories/app-user.reposit
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { AppUser } from '../domain/entities/app-user.entity';
 import { AuthResponse, UserResponse } from '../domain/types/auth-response.types';
 
@@ -145,6 +147,40 @@ export class UserAuthService {
     }
 
     return this.toUserResponse(updatedUser);
+  }
+
+  async changePassword(
+    userId: string,
+    changePasswordDto: ChangePasswordDto,
+  ): Promise<{ message: string }> {
+    const user = await this.appUserRepository.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    const isCurrentPasswordValid = await bcrypt.compare(
+      changePasswordDto.currentPassword,
+      user.password,
+    );
+
+    if (!isCurrentPasswordValid) {
+      throw new UnauthorizedException('La contraseña actual es incorrecta');
+    }
+
+    if (changePasswordDto.currentPassword === changePasswordDto.newPassword) {
+      throw new BadRequestException(
+        'La nueva contraseña debe ser diferente a la contraseña actual',
+      );
+    }
+
+    const hashedPassword = await bcrypt.hash(changePasswordDto.newPassword, 10);
+
+    await this.appUserRepository.update(userId, {
+      password: hashedPassword,
+    } as Partial<AppUser>);
+
+    return { message: 'Contraseña actualizada correctamente' };
   }
 
   private toUserResponse(user: AppUser): UserResponse {
