@@ -9,6 +9,7 @@ import { UserAuthModule } from './contexts/user-auth/user-auth.module';
 import { ExtraccionModule } from './contexts/extraccion/extraccion.module';
 import { TiendaModule } from './contexts/tienda/tienda.module';
 import { SocialModule } from './contexts/social/social.module';
+import { BusinessModule } from './contexts/business/business.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { SocialModule } from './contexts/social/social.module';
     ExtraccionModule,
     TiendaModule,
     SocialModule,
+    BusinessModule,
   ],
   controllers: [AppController],
   providers: [AppService],

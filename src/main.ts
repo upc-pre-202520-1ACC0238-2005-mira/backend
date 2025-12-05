@@ -1,10 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { json, urlencoded } from 'express';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './contexts/shared/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Configurar límite de tamaño del body (20MB para imágenes en base64)
+  app.use(json({ limit: '20mb' }));
+  app.use(urlencoded({ extended: true, limit: '20mb' }));
 
   // Habilitar CORS
   app.enableCors();
